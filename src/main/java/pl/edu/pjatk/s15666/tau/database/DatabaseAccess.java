@@ -10,15 +10,15 @@ public class DatabaseAccess {
         this.db = db;
     }
 
-    public void create(Object o) {
-
+    public Object create(Object o) {
+        return null;
     }
 
     public List<Object> readAll() {
         return null;
     }
 
-    public Object read() {
+    public Object read(int id) {
         return null;
     }
 
