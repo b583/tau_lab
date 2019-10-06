@@ -18,15 +18,15 @@ public class DatabaseAccess {
         return null;
     }
 
-    public Object read(int id) {
+    public Object read(int id) throws NotFoundException {
         return null;
     }
 
-    public void update(Object o) {
+    public void update(Object o) throws NotFoundException {
 
     }
 
-    public void delete(Object o) {
+    public void delete(Object o) throws NotFoundException {
 
     }
 

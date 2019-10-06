@@ -64,7 +64,7 @@ public class DatabaseAccessTest {
     }
 
     @org.junit.Test
-    public void read() {
+    public void read() throws NotFoundException {
         var sensor = new Sensor("Kitchen", false);
         sensor.setId(0);
         db.add(sensor);
@@ -73,7 +73,7 @@ public class DatabaseAccessTest {
     }
 
     @org.junit.Test
-    public void update() {
+    public void update() throws NotFoundException {
         var sensor = new Sensor("Garage", true);
         sensor.setId(0);
         db.add(sensor);
@@ -84,7 +84,7 @@ public class DatabaseAccessTest {
     }
 
     @org.junit.Test
-    public void delete() {
+    public void delete() throws NotFoundException {
         var sensor = new Sensor("Garage", true);
         sensor.setId(0);
         db.add(sensor);
