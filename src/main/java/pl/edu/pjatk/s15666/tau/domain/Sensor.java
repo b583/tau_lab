@@ -6,7 +6,9 @@ public class Sensor {
     private boolean isOutdoor;
     private String location;
 
-    public Sensor() {
+    public Sensor(String location, boolean isOutdoor) {
+        this.location = location;
+        this.isOutdoor = isOutdoor;
     }
 
     public int getId() {
