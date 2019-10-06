@@ -1,6 +1,8 @@
 package pl.edu.pjatk.s15666.tau.domain;
 
-public class Sensor {
+import pl.edu.pjatk.s15666.tau.database.DbObject;
+
+public class Sensor implements DbObject {
 
     private int id;
     private boolean isOutdoor;

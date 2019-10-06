@@ -11,12 +11,12 @@ import java.util.List;
 
 public class DatabaseAccessTest {
 
-    List<Object> db;
+    List<DbObject> db;
     DatabaseAccess dbAccess;
 
     @Before
     public void setup() {
-        db = new ArrayList<Object>();
+        db = new ArrayList<DbObject>();
         dbAccess = new DatabaseAccess(db);
     }
 
