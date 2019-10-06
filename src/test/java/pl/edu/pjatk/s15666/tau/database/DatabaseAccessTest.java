@@ -51,7 +51,7 @@ public class DatabaseAccessTest {
         Assert.assertTrue(sensor.getLocation().equals("Kitchen") && sensor.isOutdoor());
     }
 
-    @org.junit.Test
+    @Test
     public void readAll() {
         var sensor1 = new Sensor("Kitchen", false);
         sensor1.setId(0);
@@ -63,7 +63,7 @@ public class DatabaseAccessTest {
         Assert.assertTrue(sensors.contains(sensor1) && sensors.contains(sensor2));
     }
 
-    @org.junit.Test
+    @Test
     public void read() throws NotFoundException {
         var sensor = new Sensor("Kitchen", false);
         sensor.setId(0);
@@ -72,7 +72,7 @@ public class DatabaseAccessTest {
         Assert.assertTrue(sensor.getLocation().equals("Kitchen") && !sensor.isOutdoor());
     }
 
-    @org.junit.Test
+    @Test
     public void update() throws NotFoundException {
         var sensor = new Sensor("Garage", true);
         sensor.setId(0);
@@ -83,7 +83,7 @@ public class DatabaseAccessTest {
         Assert.assertFalse(((Sensor) db.get(0)).isOutdoor());
     }
 
-    @org.junit.Test
+    @Test
     public void delete() throws NotFoundException {
         var sensor = new Sensor("Garage", true);
         sensor.setId(0);
