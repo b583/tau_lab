@@ -51,6 +51,13 @@ public class DatabaseAccessTest {
         Assert.assertTrue(sensor.getLocation().equals("Kitchen") && sensor.isOutdoor());
     }
 
+    @Test(expected = NotEnoughSpaceException.class)
+    public void goingOverSpaceLimitWillCauseException() {
+        for(int i = 0; i < 11; i++) {
+            dbAccess.create(new Sensor("", false));
+        }
+    }
+
     @Test
     public void readAll() {
         var sensor1 = new Sensor("Kitchen", false);
