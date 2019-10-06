@@ -4,7 +4,7 @@ import pl.edu.pjatk.s15666.tau.database.DbObject;
 
 public class Sensor implements DbObject {
 
-    private int id;
+    private Integer id = null;
     private boolean isOutdoor;
     private String location;
 
@@ -13,7 +13,7 @@ public class Sensor implements DbObject {
         this.isOutdoor = isOutdoor;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
