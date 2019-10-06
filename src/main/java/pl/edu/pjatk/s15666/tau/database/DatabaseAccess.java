@@ -1,6 +1,6 @@
 package pl.edu.pjatk.s15666.tau.database;
 
-import com.sun.tools.javac.util.List;
+import java.util.List;
 
 public class DatabaseAccess {
 
