@@ -14,7 +14,10 @@ public class DatabaseAccess {
         this.db = db;
     }
 
-    public DbObject create(DbObject o) {
+    public DbObject create(DbObject o) throws NotEnoughSpaceException {
+        if(db.size() >= 10) {
+            throw new NotEnoughSpaceException();
+        }
         o.setId(atomicInteger.getAndIncrement());
         db.add(o);
         return o;

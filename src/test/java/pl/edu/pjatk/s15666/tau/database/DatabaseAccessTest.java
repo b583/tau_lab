@@ -20,25 +20,25 @@ public class DatabaseAccessTest {
         dbAccess = new DatabaseAccess(db);
     }
 
-    private Sensor create(String location, boolean isOutdoor) {
+    private Sensor create(String location, boolean isOutdoor) throws NotEnoughSpaceException {
         var testSensor = new Sensor(location, isOutdoor);
         return (Sensor) dbAccess.create(testSensor);
     }
 
     @Test
-    public void createdObjectShouldHaveID() {
+    public void createdObjectShouldHaveID() throws NotEnoughSpaceException {
         Assert.assertEquals(Integer.valueOf(0), create("", false).getId());
     }
 
     @Test
-    public void createdObjectsShouldHaveUniqueIDs() {
+    public void createdObjectsShouldHaveUniqueIDs() throws NotEnoughSpaceException {
         var sensor1 = create("", false);
         var sensor2 = create("", true);
         Assert.assertNotEquals(sensor1.getId(), sensor2.getId());
     }
 
     @Test
-    public void createdObjectShouldBeInDatabase() {
+    public void createdObjectShouldBeInDatabase() throws NotEnoughSpaceException {
         var sensor = create("", false);
         Assert.assertTrue(db
                 .stream()
@@ -46,13 +46,13 @@ public class DatabaseAccessTest {
     }
 
     @Test
-    public void createdObjectFieldsShouldBePersisted() {
+    public void createdObjectFieldsShouldBePersisted() throws NotEnoughSpaceException {
         var sensor = create("Kitchen", true);
         Assert.assertTrue(sensor.getLocation().equals("Kitchen") && sensor.isOutdoor());
     }
 
     @Test(expected = NotEnoughSpaceException.class)
-    public void goingOverSpaceLimitWillCauseException() {
+    public void goingOverSpaceLimitWillCauseException() throws NotEnoughSpaceException {
         for(int i = 0; i < 11; i++) {
             dbAccess.create(new Sensor("", false));
         }
