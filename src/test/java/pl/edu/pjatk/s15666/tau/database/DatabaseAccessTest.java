@@ -27,7 +27,7 @@ public class DatabaseAccessTest {
 
     @Test
     public void createdObjectShouldHaveID() {
-        Assert.assertEquals(0, create("", false).getId());
+        Assert.assertEquals(Integer.valueOf(0), create("", false).getId());
     }
 
     @Test
