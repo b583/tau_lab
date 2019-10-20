@@ -9,6 +9,7 @@ import org.mockito.junit.MockitoRule;
 import pl.edu.pjatk.s15666.tau.domain.Sensor;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -16,7 +17,6 @@ import static org.mockito.Mockito.when;
 public class DbObjectHolderTest {
 
     private LocalDateTime timestamp;
-    private DbObjectHolder dbo;
 
     @Mock
     private DbLocalDateTimeProvider timeProvider;
@@ -27,7 +27,6 @@ public class DbObjectHolderTest {
     @Before
     public void setup() {
         newMockTimestamp();
-        this.dbo = createHolder();
     }
 
     private LocalDateTime newMockTimestamp() {
@@ -44,11 +43,15 @@ public class DbObjectHolderTest {
 
     @Test
     public void dboHasACreationDate() {
-        assertEquals(dbo.getCreationDate(), timestamp);
+        DbObjectProperties.setTrackCreationDate(true);
+        var dbo = createHolder();
+        assertEquals(dbo.getCreationDate().get(), timestamp);
     }
 
     @Test
     public void dboTracksModificationDate() {
+        DbObjectProperties.setTrackModificationDate(true);
+        var dbo = createHolder();
         var currentTimestamp = newMockTimestamp();
         dbo.setDbObject(dbo.getDbObject());
         assertEquals(currentTimestamp, dbo.getModificationDate().get());
@@ -56,9 +59,34 @@ public class DbObjectHolderTest {
 
     @Test
     public void dboTracksAccessDate() {
+        DbObjectProperties.setTrackAccessDate(true);
+        var dbo = createHolder();
         var currentTimestamp = newMockTimestamp();
         dbo.getDbObject();
         assertEquals(currentTimestamp, dbo.getAccessDate().get());
+    }
+
+    @Test
+    public void dboDoesNotTrackCreationDateWhenPropertyIsFalse() {
+        DbObjectProperties.setTrackCreationDate(false);
+        var dbo = createHolder();
+        assertEquals(Optional.empty(), dbo.getCreationDate());
+    }
+
+    @Test
+    public void dboDoesNotTrackModificationDateWhenPropertyIsFalse() {
+        DbObjectProperties.setTrackModificationDate(false);
+        var dbo = createHolder();
+        dbo.setDbObject(dbo.getDbObject());
+        assertEquals(Optional.empty(), dbo.getModificationDate());
+    }
+
+    @Test
+    public void dboDoesNotTrackAccessDateWhenPropertyIsFalse() {
+        DbObjectProperties.setTrackAccessDate(false);
+        var dbo = createHolder();
+        dbo.getDbObject();
+        assertEquals(Optional.empty(), dbo.getAccessDate());
     }
 
 }

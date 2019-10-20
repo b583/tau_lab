@@ -5,9 +5,9 @@ import java.util.Optional;
 
 public class DbObjectHolder {
 
-    private LocalDateTime creationDate;
-    private Optional<LocalDateTime> modificationDate;
-    private Optional<LocalDateTime> accessDate;
+    private Optional<LocalDateTime> creationDate = Optional.empty();
+    private Optional<LocalDateTime> modificationDate = Optional.empty();
+    private Optional<LocalDateTime> accessDate = Optional.empty();
 
     private DbObject dbObject;
 
@@ -25,15 +25,21 @@ public class DbObjectHolder {
     }
 
     private void updateCreationDate() {
-        this.creationDate = timeProvider.get();
+        if(DbObjectProperties.isTrackCreationDate()) {
+            this.creationDate = Optional.of(timeProvider.get());
+        }
     }
 
     private void updateModificationDate() {
-        this.modificationDate = Optional.of(timeProvider.get());
+        if(DbObjectProperties.isTrackModificationDate()) {
+            this.modificationDate = Optional.of(timeProvider.get());
+        }
     }
 
     private void updateAccessDate() {
-        this.accessDate = Optional.of(timeProvider.get());
+        if(DbObjectProperties.isTrackAccessDate()) {
+            this.accessDate = Optional.of(timeProvider.get());
+        }
     }
 
     void setDbObject(DbObject o) {
@@ -41,7 +47,7 @@ public class DbObjectHolder {
         updateModificationDate();
     }
 
-    public LocalDateTime getCreationDate() {
+    public Optional<LocalDateTime> getCreationDate() {
         return creationDate;
     }
 
