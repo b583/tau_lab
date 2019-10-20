@@ -16,15 +16,24 @@ public class DbObjectHolder {
     DbObjectHolder(DbLocalDateTimeProvider provider, DbObject o) {
         this.dbObject = o;
         this.timeProvider = provider;
-        this.creationDate = timeProvider.get();
+        updateCreationDate();
     }
 
     DbObject getDbObject() {
         return dbObject;
     }
 
+    private void updateCreationDate() {
+        this.creationDate = timeProvider.get();
+    }
+
+    private void updateModificationDate() {
+        this.modificationDate = Optional.of(timeProvider.get());
+    }
+
     void setDbObject(DbObject o) {
         dbObject = o;
+        updateModificationDate();
     }
 
     public LocalDateTime getCreationDate() {

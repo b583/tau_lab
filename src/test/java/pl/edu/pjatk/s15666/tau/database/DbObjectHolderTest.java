@@ -45,4 +45,12 @@ public class DbObjectHolderTest {
         assertEquals(createHolder().getCreationDate(), timestamp);
     }
 
+    @Test
+    public void dboTracksModificationDate() {
+        var dbo = createHolder();
+        var currentTimestamp = newMockTimestamp();
+        dbo.setDbObject(dbo.getDbObject());
+        assertEquals(currentTimestamp, dbo.getModificationDate().get());
+    }
+
 }
