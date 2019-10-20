@@ -20,6 +20,7 @@ public class DbObjectHolder {
     }
 
     DbObject getDbObject() {
+        updateAccessDate();
         return dbObject;
     }
 
@@ -29,6 +30,10 @@ public class DbObjectHolder {
 
     private void updateModificationDate() {
         this.modificationDate = Optional.of(timeProvider.get());
+    }
+
+    private void updateAccessDate() {
+        this.accessDate = Optional.of(timeProvider.get());
     }
 
     void setDbObject(DbObject o) {

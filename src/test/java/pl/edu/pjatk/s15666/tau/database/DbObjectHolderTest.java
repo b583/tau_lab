@@ -16,6 +16,7 @@ import static org.mockito.Mockito.when;
 public class DbObjectHolderTest {
 
     private LocalDateTime timestamp;
+    private DbObjectHolder dbo;
 
     @Mock
     private DbLocalDateTimeProvider timeProvider;
@@ -24,8 +25,9 @@ public class DbObjectHolderTest {
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Before
-    public void setupMock() {
+    public void setup() {
         newMockTimestamp();
+        this.dbo = createHolder();
     }
 
     private LocalDateTime newMockTimestamp() {
@@ -42,15 +44,21 @@ public class DbObjectHolderTest {
 
     @Test
     public void dboHasACreationDate() {
-        assertEquals(createHolder().getCreationDate(), timestamp);
+        assertEquals(dbo.getCreationDate(), timestamp);
     }
 
     @Test
     public void dboTracksModificationDate() {
-        var dbo = createHolder();
         var currentTimestamp = newMockTimestamp();
         dbo.setDbObject(dbo.getDbObject());
         assertEquals(currentTimestamp, dbo.getModificationDate().get());
+    }
+
+    @Test
+    public void dboTracksAccessDate() {
+        var currentTimestamp = newMockTimestamp();
+        dbo.getDbObject();
+        assertEquals(currentTimestamp, dbo.getAccessDate().get());
     }
 
 }
