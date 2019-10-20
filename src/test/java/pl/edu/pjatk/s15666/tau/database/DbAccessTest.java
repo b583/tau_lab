@@ -9,20 +9,26 @@ import pl.edu.pjatk.s15666.tau.domain.Sensor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DatabaseAccessTest {
+public class DbAccessTest {
 
-    List<DbObject> db;
-    DatabaseAccess dbAccess;
+    private List<DbObjectHolder> db;
+    private DbAccess dbAccess;
 
     @Before
     public void setup() {
-        db = new ArrayList<DbObject>();
-        dbAccess = new DatabaseAccess(db);
+        db = new ArrayList<>();
+        dbAccess = new DbAccess(db, new DbLocalDateTimeProvider());
     }
 
     private Sensor create(String location, boolean isOutdoor) throws NotEnoughSpaceException {
         var testSensor = new Sensor(location, isOutdoor);
-        return (Sensor) dbAccess.create(testSensor);
+        return (Sensor) dbAccess.create(testSensor).getDbObject();
+    }
+
+    private DbObjectHolder add(Sensor s) {
+        var dbo = new DbObjectHolder(new DbLocalDateTimeProvider(), s);
+        db.add(dbo);
+        return dbo;
     }
 
     @Test
@@ -42,7 +48,7 @@ public class DatabaseAccessTest {
         var sensor = create("", false);
         Assert.assertTrue(db
                 .stream()
-                .anyMatch(o -> o == sensor));
+                .anyMatch(o -> o.getDbObject() == sensor));
     }
 
     @Test
@@ -64,18 +70,18 @@ public class DatabaseAccessTest {
         sensor1.setId(0);
         var sensor2 = new Sensor("Patio", true);
         sensor2.setId(1);
-        db.add(sensor1);
-        db.add(sensor2);
+        var sensor1_dbo = this.add(sensor1);
+        var sensor2_dbo = this.add(sensor2);
         var sensors = dbAccess.readAll();
-        Assert.assertTrue(sensors.contains(sensor1) && sensors.contains(sensor2));
+        Assert.assertTrue(sensors.contains(sensor1_dbo) && sensors.contains(sensor2_dbo));
     }
 
     @Test
     public void read() throws NotFoundException {
         var sensor = new Sensor("Kitchen", false);
         sensor.setId(0);
-        db.add(sensor);
-        sensor = (Sensor) dbAccess.read(0);
+        this.add(sensor);
+        sensor = (Sensor) dbAccess.read(0).getDbObject();
         Assert.assertTrue(sensor.getLocation().equals("Kitchen") && !sensor.isOutdoor());
     }
 
@@ -88,11 +94,11 @@ public class DatabaseAccessTest {
     public void update() throws NotFoundException {
         var sensor = new Sensor("Garage", true);
         sensor.setId(0);
-        db.add(sensor);
+        this.add(sensor);
         sensor = new Sensor("Garage", false);
         sensor.setId(0);
         dbAccess.update(sensor);
-        Assert.assertFalse(((Sensor) db.get(0)).isOutdoor());
+        Assert.assertFalse(((Sensor) db.get(0).getDbObject()).isOutdoor());
     }
 
     @Test(expected = NotFoundException.class)
@@ -106,7 +112,7 @@ public class DatabaseAccessTest {
     public void delete() throws NotFoundException {
         var sensor = new Sensor("Garage", true);
         sensor.setId(0);
-        db.add(sensor);
+        this.add(sensor);
         dbAccess.delete(sensor);
         Assert.assertTrue(db.isEmpty());
     }

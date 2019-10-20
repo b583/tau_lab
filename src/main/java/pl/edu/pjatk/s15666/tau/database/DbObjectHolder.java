@@ -18,7 +18,7 @@ public class DbObjectHolder {
         this.timeProvider = provider;
     }
 
-    public Object getDbObject() {
+    DbObject getDbObject() {
         return dbObject;
     }
 

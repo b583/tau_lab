@@ -5,35 +5,42 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class DatabaseAccess {
+class DbAccess {
 
-    private List<DbObject> db;
+    private List<DbObjectHolder> db;
     private AtomicInteger atomicInteger = new AtomicInteger();
+    private DbLocalDateTimeProvider timeProvider;
 
-    public DatabaseAccess(List<DbObject> db) {
+    DbAccess(List<DbObjectHolder> db, DbLocalDateTimeProvider timeProvider) {
         this.db = db;
+        this.timeProvider = timeProvider;
     }
 
-    public DbObject create(DbObject o) throws NotEnoughSpaceException {
+    private DbObjectHolder createObjectHolder(DbObject o) {
+        return new DbObjectHolder(timeProvider, o);
+    }
+
+    DbObjectHolder create(DbObject o) throws NotEnoughSpaceException {
         if(db.size() >= 10) {
             throw new NotEnoughSpaceException();
         }
         o.setId(atomicInteger.getAndIncrement());
-        db.add(o);
-        return o;
+        var dbo = createObjectHolder(o);
+        db.add(dbo);
+        return dbo;
     }
 
-    public List<DbObject> readAll() {
+    List<DbObjectHolder> readAll() {
         return new ArrayList<>(db);
     }
 
-    private Optional<DbObject> getObjectByID(int id) {
+    private Optional<DbObjectHolder> getObjectByID(int id) {
         return db.stream()
-                .filter(o -> o.getId().equals(id))
+                .filter(o -> o.getDbObject().getId().equals(id))
                 .findAny();
     }
 
-    public DbObject read(int id) throws NotFoundException {
+    DbObjectHolder read(int id) throws NotFoundException {
         var optional = getObjectByID(id);
         if(optional.isPresent()) {
             return optional.get();
@@ -41,17 +48,16 @@ public class DatabaseAccess {
         throw new NotFoundException();
     }
 
-    public void update(DbObject o) throws NotFoundException {
+    void update(DbObject o) throws NotFoundException {
         var optional = getObjectByID(o.getId());
         if(optional.isPresent()) {
-            db.remove(optional.get());
-            db.add(o);
+            optional.get().setDbObject(o);
         } else {
             throw new NotFoundException();
         }
     }
 
-    public void delete(DbObject o) throws NotFoundException {
+    void delete(DbObject o) throws NotFoundException {
         var optional = getObjectByID(o.getId());
         if(optional.isPresent()) {
             db.remove(optional.get());
