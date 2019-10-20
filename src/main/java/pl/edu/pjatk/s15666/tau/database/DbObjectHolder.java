@@ -16,6 +16,7 @@ public class DbObjectHolder {
     DbObjectHolder(DbLocalDateTimeProvider provider, DbObject o) {
         this.dbObject = o;
         this.timeProvider = provider;
+        this.creationDate = timeProvider.get();
     }
 
     DbObject getDbObject() {
