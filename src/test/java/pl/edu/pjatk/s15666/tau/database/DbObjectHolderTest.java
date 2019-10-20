@@ -12,7 +12,9 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 public class DbObjectHolderTest {
 
@@ -39,6 +41,12 @@ public class DbObjectHolderTest {
     private DbObjectHolder createHolder() {
         var sensor = new Sensor("", false);
         return new DbObjectHolder(timeProvider, sensor);
+    }
+
+    @Test
+    public void timeProviderIsUsedForTimestampRetrieval() {
+        createHolder();
+        verify(timeProvider).get();
     }
 
     @Test
