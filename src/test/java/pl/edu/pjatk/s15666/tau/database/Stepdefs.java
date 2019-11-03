@@ -30,9 +30,13 @@ public class Stepdefs {
         Assert.assertEquals(object, dbAccess.readAll().get(0).getDbObject());
     }
 
-    @Then("object can be removed from the database")
-    public void object_can_be_removed_from_the_database() throws NotFoundException {
+    @When("object is removed from the database")
+    public void object_is_removed_from_the_database() throws NotFoundException {
         dbAccess.delete(object);
+    }
+
+    @Then("object cannot be read from the database")
+    public void object_cannot_be_read_from_the_database() {
         Assert.assertTrue(dbAccess.readAll().isEmpty());
     }
 

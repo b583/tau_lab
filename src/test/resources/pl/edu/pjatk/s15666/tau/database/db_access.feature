@@ -9,4 +9,5 @@ Feature: Database Access?
     Then object can be read from the database
 
   Scenario: Object is removed
-    Then object can be removed from the database
+    When object is removed from the database
+    Then object cannot be read from the database
